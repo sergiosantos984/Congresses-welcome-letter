@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congresses Welcome Letter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #FFF7EF;          /* Ivory */
+            --card-bg: #ffffff;
+            --text-main: #35506B;        /* Slate Blue */
+            --text-secondary: #C9C2BA;   /* Warm Gray */
+            --accent: #35506B;           /* Slate Blue primary interaction */
+            --highlight: #FFC38A;        /* Light Orange */
+            --badge-success: #A8B5A1;    /* Sage */
+            --badge-info: #D6E4EF;       /* Light Blue */
+            --border-color: #e6e0da;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 60px 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1120px;
+        }
+
+        header {
+            margin-bottom: 48px;
+            text-align: center;
+            animation: fadeIn 0.8s var(--transition);
+        }
+
+        header h1 {
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        header p {
+            color: #647a90;
+            font-size: 17px;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: inline-flex;
+            background: rgba(53, 80, 107, 0.06);
+            padding: 5px;
+            border-radius: 14px;
+            margin-bottom: 32px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            background: var(--card-bg);
+            box-shadow: 0px 4px 12px rgba(53, 80, 107, 0.08);
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(53, 80, 107, 0.03);
+            margin-bottom: 32px;
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.6s var(--transition);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #f0eae4;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 4px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #7b91a7;
+            letter-spacing: 0.2px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            color: var(--text-main);
+            background: #faf8f5;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 4px rgba(53, 80, 107, 0.1);
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            background: #24394e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(53, 80, 107, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(53, 80, 107, 0.06);
+            color: var(--text-main);
+            margin-right: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(53, 80, 107, 0.1);
+            box-shadow: none;
+        }
+
+        .upload-zone {
+            border: 2px dashed #dcd6cf;
+            border-radius: var(--radius-lg);
+            padding: 60px 40px;
+            text-align: center;
+            cursor: pointer;
+            background: #fdfbfa;
+            transition: var(--transition);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--accent);
+            background: rgba(53, 80, 107, 0.02);
+        }
+
+        .upload-zone p {
+            color: var(--text-main);
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 16px;
+        }
+
+        .upload-zone span.sub-text {
+            display: block;
+            color: #7b91a7;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--card-bg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f5f0ea;
+        }
+
+        th {
+            background: #faf8f5;
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 13px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .badge-orange { background-color: var(--highlight); color: #5f3e1d; }
+        .badge-blue { background-color: var(--badge-info); color: #1e3852; }
+
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: #d9383a;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+
+        .delete-btn:hover {
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Congresses Welcome Letter</h1>
+        <p>Intelligent, beautifully automated document asset creator engineered with meticulous detail layout structures.</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('manual')">Manual Entry Matrix</button>
+        <button class="tab-btn" onclick="switchTab('import')">Excel Pipeline Drop</button>
+    </div>
+
+    <div id="manual-view">
+        <div class="card">
+            <form id="traveler-form" onsubmit="event.preventDefault(); addTravelerManual();">
+                <div class="section-title">General Event Target Data</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome do passageiro</label><input type="text" id="m-name" required placeholder="RICARDO FIGUEIRA"></div>
+                    <div class="form-group"><label>Evento</label><input type="text" id="m-event" required placeholder="EULAR 2026"></div>
+                    <div class="form-group"><label>Data do Evento</label><input type="text" id="m-event-date" placeholder="de 03 a 06 junho"></div>
+                    <div class="form-group"><label>Local do Evento</label><input type="text" id="m-event-loc" placeholder="Londres, Reino Unido"></div>
+                    <div class="form-group"><label>Inscrição</label><input type="text" id="m-reg" placeholder="EULAR2026000002"></div>
+                </div>
+
+                <div class="section-title">Accommodation & Venue Profiles</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome do Hotel</label><input type="text" id="m-hotel" placeholder="Hyatt Place City East 4*"></div>
+                    <div class="form-group"><label>VENUE</label><input type="text" id="m-venue" placeholder="ExCel London"></div>
+                    <div class="form-group"><label>Codigo de Reserva do Hotel</label><input type="text" id="m-hcode" placeholder="90463815"></div>
+                    <div class="form-group"><label>Morada do Hotel</label><input type="text" id="m-haddress" placeholder="45 Whitechapel Rd, London"></div>
+                    <div class="form-group"><label>Fax/Telefone</label><input type="text" id="m-hphone" placeholder="+44 20 8159 1234"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Check in date</label><input type="text" id="m-cin" placeholder="02/06/2026"></div>
+                    <div class="form-group"><label>Check out date</label><input type="text" id="m-cout" placeholder="06/06/2026"></div>
+                    <div class="form-group"><label>Tipologia de Quarto</label><input type="text" id="m-rtype" placeholder="Individual com Pequeno-Almoço"></div>
+                    <div class="form-group"><label>Horário de pequeno-almoço</label><input type="text" id="m-btime" placeholder="07h00 às 10h30"></div>
+                </div>
+
+                <div class="section-title">Flight Manifest Matrix</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Voo de Ida</label><input type="text" id="m-fout" placeholder="02JUN BA2719 FUNCHAL"></div>
+                    <div class="form-group"><label>nº bilhete (1)</label><input type="text" id="m-t1" placeholder="BA 125-6397727069"></div>
+                    <div class="form-group"><label>Voo de Regresso</label><input type="text" id="m-fret" placeholder="06JUN LS1445 STANSTED"></div>
+                    <div class="form-group"><label>nº bilhete (2)</label><input type="text" id="m-t2" placeholder="LS 949-2406065915"></div>
+                </div>
+
+                <div class="section-title">Ground Transport Logistics</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Data de chegada</label><input type="text" id="m-arr-date" placeholder="02/06/2026"></div>
+                    <div class="form-group"><label>Pick up Transfer chegada</label><input type="text" id="m-t-arr" placeholder="Pick-up no aeroporto"></div>
+                    <div class="form-group"><label>Data saída</label><input type="text" id="m-dep-date" placeholder="06/06/2026"></div>
+                    <div class="form-group"><label>Hora Pick up Transfer Saída</label><input type="text" id="m-t-ptime" placeholder="15:00:00"></div>
+                    <div class="form-group"><label>Destino de saída</label><input type="text" id="m-t-dest" placeholder="STANSTED"></div>
+                </div>
+
+                <div class="section-title">Group Dinner Allocation Mapping</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Restaurante 1: Nome</label><input type="text" id="m-r1-n" placeholder="Hyatt Place City East 4*"></div>
+                    <div class="form-group"><label>Restaurante 1: Morada</label><input type="text" id="m-r1-m" placeholder="45 Whitechapel Rd"></div>
+                    <div class="form-group"><label>Restaurante 1: Data</label><input type="text" id="m-r1-d" placeholder="02/06/2026"></div>
+                    <div class="form-group"><label>Restaurante 1: Hora</label><input type="text" id="m-r1-h" placeholder="Serviço de Meal Boxes"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Restaurante 2: Nome</label><input type="text" id="m-r2-n" placeholder="Brother Marcus Spitalfields"></div>
+                    <div class="form-group"><label>Restaurante 2: Morada</label><input type="text" id="m-r2-m" placeholder="2 Crispin Pl"></div>
+                    <div class="form-group"><label>Restaurante 2: Data</label><input type="text" id="m-r2-d" placeholder="03/06/2026"></div>
+                    <div class="form-group"><label>Restaurante 2: Hora</label><input type="text" id="m-r2-h" placeholder="20:00"></div>
+                </div>
+
+                <div style="text-align: right; margin-top: 12px;">
+                    <button type="submit" class="btn">Register Passenger File</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 20px; font-weight: 600; font-size: 18px; letter-spacing: -0.3px;">Active Matrix Workspace Logs</h3>
+            <div class="table-container">
+                <table id="master-log-grid">
+                    <thead>
+                        <tr>
+                            <th>Action</th><th>Nome do passageiro</th><th>Evento</th><th>Hotel</th><th>Check In</th><th>Check Out</th><th>Hora Pick Up Saída</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="7" style="text-align: center; color: #7b91a7; padding: 32px; font-style: italic;">Roster workspace empty. Submit manually or drop a document sheet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="import-view" class="hidden">
+        <div class="card">
+            <div class="upload-zone" onclick="document.getElementById('excel-pipeline-file').click()">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#35506B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p>Import your Excel mapping roster configuration</p>
+                <span class="sub-text">Drag and drop spreadsheet files instantly into the document processor</span>
+                <span id="pipeline-file-name" style="display: block; margin-top: 16px; font-size: 14px; color: #35506B; font-weight: 600;"></span>
+                <input type="file" id="excel-pipeline-file" accept=".xlsx, .xls" class="hidden" onchange="runSpreadsheetPipeline(event)">
+            </div>
+        </div>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn btn-secondary" onclick="exportDataToSpreadsheet()">Download Master Data Excel</button>
+        <button class="btn" onclick="executeWordMergeOutputEngine()">Generate Target Welcome Letters</button>
+    </div>
+</div>
+
+<script>
+    let primaryDataStorage = [];
+
+    function switchTab(view) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        if(view === 'manual') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('manual-view').classList.remove('hidden');
+            document.getElementById('import-view').classList.add('hidden');
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('manual-view').classList.add('hidden');
+            document.getElementById('import-view').classList.remove('hidden');
+        }
+    }
+
+    function cleanExcelValue(val) {
+        if (val === undefined || val === null) return 'N/A';
+        if (val instanceof Date) {
+            if (val.getFullYear() === 1899 || val.getFullYear() === 1900) {
+                let h = val.getHours();
+                let m = val.getMinutes();
+                return `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}`;
+            }
+            let d = val.getDate();
+            let m = val.getMonth() + 1;
+            let y = val.getFullYear();
+            return `${d < 10 ? '0' + d : d}/${m < 10 ? '0' + m : m}/${y}`;
+        }
+        return val.toString().trim() || 'N/A';
+    }
+
+    function addTravelerManual() {
+        let row = {
+            passengerName: document.getElementById('m-name').value.trim(),
+            event: document.getElementById('m-event').value.trim(),
+            eventDate: document.getElementById('m-event-date').value.trim() || 'N/A',
+            eventLocation: document.getElementById('m-event-loc').value.trim() || 'N/A',
+            registration: document.getElementById('m-reg').value.trim() || 'N/A',
+            hotelName: document.getElementById('m-hotel').value.trim() || 'N/A',
+            venue: document.getElementById('m-venue').value.trim() || 'N/A',
+            hotelCode: document.getElementById('m-hcode').value.trim() || 'N/A',
+            hotelAddress: document.getElementById('m-haddress').value.trim() || 'N/A',
+            hotelPhone: document.getElementById('m-hphone').value.trim() || 'N/A',
+            checkInDate: document.getElementById('m-cin').value.trim() || 'N/A',
+            checkOutDate: document.getElementById('m-cout').value.trim() || 'N/A',
+            roomType: document.getElementById('m-rtype').value.trim() || 'N/A',
+            breakfastHours: document.getElementById('m-btime').value.trim() || 'N/A',
+            flightIda: document.getElementById('m-fout').value.trim() || 'N/A',
+            ticket1: document.getElementById('m-t1').value.trim() || 'N/A',
+            flightRegresso: document.getElementById('m-fret').value.trim() || 'N/A',
+            ticket2: document.getElementById('m-t2').value.trim() || 'N/A',
+            arrivalDate: document.getElementById('m-arr-date').value.trim() || 'N/A',
+            transferArrival: document.getElementById('m-t-arr').value.trim() || 'N/A',
+            departureDate: document.getElementById('m-dep-date').value.trim() || 'N/A',
+            transferPickUpTime: document.getElementById('m-t-ptime').value.trim() || 'N/A',
+            transferDepartureDestination: document.getElementById('m-t-dest').value.trim() || 'N/A',
+            
+            dinners: [
+                { nome: document.getElementById('m-r1-n').value.trim() || 'N/A', morada: document.getElementById('m-r1-m').value.trim() || 'N/A', data: document.getElementById('m-r1-d').value.trim() || 'N/A', hora: document.getElementById('m-r1-h').value.trim() || 'N/A' },
+                { nome: document.getElementById('m-r2-n').value.trim() || 'N/A', morada: document.getElementById('m-r2-m').value.trim() || 'N/A', data: document.getElementById('m-r2-d').value.trim() || 'N/A', hora: document.getElementById('m-r2-h').value.trim() || 'N/A' }
+            ]
+        };
+
+        primaryDataStorage.push(row);
+        document.getElementById('traveler-form').reset();
+        refreshMasterTableUI();
+    }
+
+    function removeRowLog(index) {
+        primaryDataStorage.splice(index, 1);
+        refreshMasterTableUI();
+    }
+
+    function refreshMasterTableUI() {
+        const tbody = document.querySelector('#master-log-grid tbody');
+        if(primaryDataStorage.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #7b91a7; padding: 32px; font-style: italic;">Roster workspace empty. Submit manually or drop a document sheet.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = primaryDataStorage.map((r, i) => `
+            <tr>
+                <td><button class="delete-btn" onclick="removeRowLog(${i})">Delete</button></td>
+                <td><strong>${r.passengerName}</strong></td>
+                <td><span class="badge badge-blue">${r.event}</span></td>
+                <td>${r.hotelName}</td>
+                <td>${r.checkInDate}</td>
+                <td>${r.checkOutDate}</td>
+                <td><span class="badge badge-orange">${r.transferPickUpTime}</span></td>
+            </tr>
+        `).join('');
+    }
+
+    function runSpreadsheetPipeline(e) {
+        const file = e.target.files[0];
+        if(!file) return;
+        document.getElementById('pipeline-file-name').innerText = `Active Asset: ${file.name}`;
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const data = new Uint8Array(evt.target.result);
+            const workbook = XLSX.read(data, {type: 'array', cellDates: true});
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const matrix = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+
+            if(matrix.length <= 1) {
+                alert('Spreadsheet matrix empty.');
+                return;
+            }
+
+            const headerRow = matrix[0].map(h => h ? h.toString().trim().replace(/\s+/g, ' ').toLowerCase() : '');
+            primaryDataStorage = [];
+
+            function pull(row, targetHeader) {
+                let cleanedTarget = targetHeader.trim().replace(/\s+/g, ' ').toLowerCase();
+                let mIdx = headerRow.findIndex(h => h === cleanedTarget);
+                if(mIdx !== -1) {
+                    return cleanExcelValue(row[mIdx]);
+                }
+                return 'N/A';
+            }
+
+            for(let i = 1; i < matrix.length; i++) {
+                let row = matrix[i];
+                if(!row || row.length === 0 || !row[2]) continue;
+
+                let record = {
+                    passengerName: pull(row, 'Nome do passageiro'),
+                    event: pull(row, 'Evento'),
+                    eventDate: pull(row, 'Data do_Evento'),
+                    eventLocation: pull(row, 'Local do Evento'),
+                    registration: pull(row, 'Inscrição'),
+                    hotelName: pull(row, 'Nome do Hotel'),
+                    venue: pull(row, 'VENUE'),
+                    hotelCode: pull(row, 'Codigo de Reserva do Hotel'),
+                    hotelAddress: pull(row, 'Morada do Hotel'),
+                    hotelPhone: pull(row, 'Fax/Telefone'),
+                    checkInDate: pull(row, 'Check in date'),
+                    checkOutDate: pull(row, 'Check out date'),
+                    roomType: pull(row, 'Tipologia de Quarto'),
+                    breakfastHours: pull(row, 'Horário de pequeno-almoço'),
+                    flightIda: pull(row, 'Voo de Ida '),
+                    ticket1: pull(row, 'nº bilhete (1)'),
+                    flightRegresso: pull(row, 'Voo de Regresso'),
+                    ticket2: pull(row, 'nº bilhete (2)'),
+                    arrivalDate: pull(row, 'Data de chegada'),
+                    transferArrival: pull(row, 'Pick up Transfer chegada'),
+                    departureDate: pull(row, 'Data saída'),
+                    transferPickUpTime: pull(row, 'Hora Pick up Transfer Saída'),
+                    transferDepartureDestination: pull(row, 'Destino de saída'),
+                    
+                    dinners: [
+                        { nome: pull(row, 'Nome do Restaurante 1'), morada: pull(row, 'Morada do Restaurante 1'), data: pull(row, 'Data 1'), hora: pull(row, 'Hora 1') },
+                        { nome: pull(row, 'Nome do Restaurante 2'), morada: pull(row, 'Morada do Restaurante 2'), data: pull(row, 'Data 2'), hora: pull(row, 'Hora 2') }
+                    ]
+                };
+                primaryDataStorage.push(record);
+            }
+
+            refreshMasterTableUI();
+            alert(`Parsed ${primaryDataStorage.length} database logs cleanly inside the system workspace.`);
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function exportDataToSpreadsheet() {
+        if(primaryDataStorage.length === 0) {
+            alert('No records available to export.');
+            return;
+        }
+        let output = [["Nome do passageiro", "Evento", "Data  do_Evento", "Local do Evento", "Inscrição", "Nome do Hotel", "VENUE", "Codigo de Reserva do Hotel", "Morada do Hotel", "Fax/Telefone", "Check in date", "Check out date", "Tipologia de Quarto", "Horário de pequeno-almoço", "Voo de Ida ", "nº bilhete (1)", "Voo de Regresso", "nº bilhete (2)", "Data de chegada", "Pick up Transfer chegada", "Data saída", " Hora Pick up Transfer Saída", "Destino de saída"]];
+        
+        primaryDataStorage.forEach(r => {
+            output.push([
+                r.passengerName, r.event, r.eventDate, r.eventLocation, r.registration,
+                r.hotelName, r.venue, r.hotelCode, r.hotelAddress, r.hotelPhone,
+                r.checkInDate, r.checkOutDate, r.roomType, r.breakfastHours,
+                r.flightIda, r.ticket1, r.flightRegresso, r.ticket2,
+                r.arrivalDate, r.transferArrival, r.departureDate, r.transferPickUpTime, r.transferDepartureDestination
+            ]);
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(output);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Master Operational Log");
+        XLSX.writeFile(wb, "TravelStore_Compiled_Database.xlsx");
+    }
+
+    function executeWordMergeOutputEngine() {
+        if(primaryDataStorage.length === 0) {
+            alert('No files currently tracked in the data view.');
+            return;
+        }
+
+        const sections = [];
+
+        primaryDataStorage.forEach((traveler, index) => {
+            const tableRows = [
+                new docx.TableRow({
+                    children: [
+                        new docx.TableCell({ children: [new docx.Paragraph({ text: "Nome do Restaurante", bold: true, size: 18 })], shading: { fill: "F2F2F7" } }),
+                        new docx.TableCell({ children: [new docx.Paragraph({ text: "Morada", bold: true, size: 18 })], shading: { fill: "F2F2F7" } }),
+                        new docx.TableCell({ children: [new docx.Paragraph({ text: "Data do Jantar", bold: true, size: 18 })], shading: { fill: "F2F2F7" } }),
+                        new docx.TableCell({ children: [new docx.Paragraph({ text: "Hora do Jantar", bold: true, size: 18 })], shading: { fill: "F2F2F7" } })
+                    ]
+                })
+            ];
+
+            traveler.dinners.forEach(d => {
+                if (d.nome !== 'N/A') {
+                    tableRows.push(new docx.TableRow({
+                        children: [
+                            new docx.TableCell({ children: [new docx.Paragraph({ text: d.nome, size: 18 })] }),
+                            new docx.TableCell({ children: [new docx.Paragraph({ text: d.morada, size: 18 })] }),
+                            new docx.TableCell({ children: [new docx.Paragraph({ text: d.data, size: 18 })] }),
+                            new docx.TableCell({ children: [new docx.Paragraph({ text: d.hora, size: 18 })] })
+                        ]
+                    }));
+                }
+            });
+
+            const nativeDiningTable = new docx.Table({
+                rows: tableRows,
+                width: { size: 100, type: docx.WidthType.PERCENTAGE }
+            });
+
+            const content = [
+                new docx.Paragraph({ text: "GRUPO TravelStore", bold: true, size: 20 }),
+                new docx.Paragraph({ text: "Campo Grande – 35 2º | 1700-087 LISBOA", size: 16 }),
+                new docx.Paragraph({ text: "Serviço de assistência 24 horas: +351 213565340", size: 16 }),
+                new docx.Paragraph({ text: "Responsável TravelStore: Beatriz Augusto +351 912000511", size: 16 }),
+                new docx.Paragraph({ text: "Responsável J&J no Local: Ana agostinho +351 917535678 / João Almeida +351 913305965", size: 16, spacing: { after: 300 } }),
+                
+                new docx.Paragraph({ text: `Exmo.(a) Sr(a) ${traveler.passengerName},`, bold: true, size: 22, spacing: { after: 120 } }),
+                new docx.Paragraph({ text: `Para a sua participação no evento ${traveler.event}, de ${traveler.eventDate}, em ${traveler.eventLocation}, informamos que temos reservado o seguinte:`, size: 20, spacing: { after: 180 } }),
+                
+                new docx.Paragraph({ text: `Inscrição - Onsite: ${traveler.registration}`, bold: true, size: 20 }),
+                new docx.Paragraph({ text: "Solicita-se que tenha em sua posse a confirmação de inscrição, previamente enviada diretamente para o seu e-mail pelo secretariado. No primeiro dia de congresso, deverá efetuar o levantamento do seu Badge, à entrada.", size: 16, color: "666666", spacing: { after: 200 } }),
+                
+                new docx.Paragraph({ text: "Alojamento", bold: true, size: 22, color: "35506B", spacing: { before: 120, after: 60 } }),
+                new docx.Paragraph({ text: traveler.hotelName, bold: true, size: 20 }),
+                new docx.Paragraph({ text: `Event venue: ${traveler.venue}`, size: 18 }),
+                new docx.Paragraph({ text: `Nr. Reserva / reservation nr.: ${traveler.hotelCode}`, size: 18 }),
+                new docx.Paragraph({ text: traveler.hotelAddress, size: 18 }),
+                new docx.Paragraph({ text: traveler.hotelPhone, size: 18 }),
+                new docx.Paragraph({ text: `Check in: ${traveler.checkInDate}    Check out: ${traveler.checkOutDate}`, bold: true, size: 18 }),
+                new docx.Paragraph({ text: `Tipologia de Quarto: ${traveler.roomType}`, size: 18 }),
+                new docx.Paragraph({ text: `Disponibilidade do pequeno almoço: ${traveler.breakfastHours}`, size: 16, italic: true }),
+                new docx.Paragraph({ text: "Nota: Qualquer despesa extra efetuada na unidade hoteleira deverá ser paga diretamente pelo hóspede.", size: 16, color: "666666", spacing: { after: 200 } }),
+
+                new docx.Paragraph({ text: "Voos", bold: true, size: 22, color: "35506B", spacing: { after: 60 } }),
+                new docx.Paragraph({ text: "Recomendamos chegada ao aeroporto 2 horas antes do voo para voos continentais e 3 horas para voos intercontinentais.", size: 16, color: "666666" }),
+                new docx.Paragraph({ text: "Voo IDA", bold: true, size: 18 }),
+                new docx.Paragraph({ text: traveler.flightIda, size: 18 }),
+                new docx.Paragraph({ text: `Nro do bilhete: ${traveler.ticket1}`, size: 18 }),
+                new docx.Paragraph({ text: "Voo REGRESSO", bold: true, size: 18 }),
+                new docx.Paragraph({ text: traveler.flightRegresso, size: 18 }),
+                new docx.Paragraph({ text: `Nro do bilhete: ${traveler.ticket2}`, size: 18, spacing: { after: 200 } }),
+
+                new docx.Paragraph({ text: "Transferes", bold: true, size: 22, color: "35506B", spacing: { after: 60 } }),
+                new docx.Paragraph({ text: "Estão providenciados os seguintes transferes Aeroporto/ Hotel /Aeroporto, com os seguintes horários:", size: 18 }),
+                new docx.Paragraph({ text: `Contatos úteis: Oana SALAGEANU: +44 (0) 740 753 1085 (Congress Bookers)`, size: 16, color: "666666" }),
+                new docx.Paragraph({ text: `${traveler.arrivalDate} – Pick-up no aeroporto à hora de chegada do voo: ${traveler.transferArrival}`, size: 18 }),
+                new docx.Paragraph({ text: `${traveler.departureDate} – ${traveler.transferPickUpTime} Pick up no hotel para o ${traveler.transferDepartureDestination}`, size: 18, spacing: { after: 200 } }),
+
+                new docx.Paragraph({ text: "Refeições", bold: true, size: 22, color: "35506B", spacing: { after: 60 } }),
+                new docx.Paragraph({ text: "Serão providenciados os seguintes jantares de grupo:", size: 18, spacing: { after: 120 } }),
+                
+                nativeDiningTable, 
+
+                new docx.Paragraph({ text: "Todos os serviços acima mencionados estão pagos pela LAB Events/TravelStore– Prestação de Serviços – Viagens, S.A", size: 16, color: "888888", spacing: { before: 180 } }),
+                new docx.Paragraph({ text: "A Johnson&Johnson Innovative Medicine deseja-lhe uma Boa Viagem!", bold: true, size: 22, alignment: docx.AlignmentType.CENTER, spacing: { before: 180 } })
+            ];
+
+            if (index < primaryDataStorage.length - 1) {
+                content.push(new docx.Paragraph({ text: "", pageBreakBefore: true }));
+            }
+
+            sections.push({ properties: {}, children: content });
+        });
+
+        const doc = new docx.Document({ sections: sections });
+        docx.Packer.toBlob(doc).then(blob => {
+            saveAs(blob, "TravelStore_Personalized_Welcome_Letters.docx");
+        });
+    }
+</script>
+</body>
+</html>
