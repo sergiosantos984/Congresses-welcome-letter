@@ -382,6 +382,16 @@
                     <div class="form-group"><label>Restaurante 2: Data</label><input type="text" id="m-r2-d" placeholder="03/06/2026"></div>
                     <div class="form-group"><label>Restaurante 2: Hora</label><input type="text" id="m-r2-h" placeholder="20:00"></div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Restaurante 3: Nome</label><input type="text" id="m-r3-n" placeholder="Restaurante 3"></div>
+                </div>
+
+                <div class="section-title">Hotel to Restaurants Distance Performance Metrics</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Distância 1</label><input type="text" id="m-dist-1" placeholder="0 Mts"></div>
+                    <div class="form-group"><label>Distância 2</label><input type="text" id="m-dist-2" placeholder="500 Mts"></div>
+                    <div class="form-group"><label>Distância 3</label><input type="text" id="m-dist-3" placeholder="1.2 Km"></div>
+                </div>
 
                 <div style="text-align: right; margin-top: 12px;">
                     <button type="submit" class="btn">Register Passenger File</button>
@@ -456,6 +466,16 @@
         return val.toString().trim() || 'N/A';
     }
 
+    function normalizeHeaderString(str) {
+        if (!str) return '';
+        return str.toString()
+            .trim()
+            .replace(/\s+/g, ' ')
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, ""); // Strips accents entirely (distância -> distancia)
+    }
+
     function addTravelerManual() {
         let row = {
             passengerName: document.getElementById('m-name').value.trim(),
@@ -482,9 +502,14 @@
             transferPickUpTime: document.getElementById('m-t-ptime').value.trim() || 'N/A',
             transferDepartureDestination: document.getElementById('m-t-dest').value.trim() || 'N/A',
             
+            distancia1: document.getElementById('m-dist-1').value.trim() || 'N/A',
+            distancia2: document.getElementById('m-dist-2').value.trim() || 'N/A',
+            distancia3: document.getElementById('m-dist-3').value.trim() || 'N/A',
+
             dinners: [
                 { nome: document.getElementById('m-r1-n').value.trim() || 'N/A', morada: document.getElementById('m-r1-m').value.trim() || 'N/A', data: document.getElementById('m-r1-d').value.trim() || 'N/A', hora: document.getElementById('m-r1-h').value.trim() || 'N/A' },
-                { nome: document.getElementById('m-r2-n').value.trim() || 'N/A', morada: document.getElementById('m-r2-m').value.trim() || 'N/A', data: document.getElementById('m-r2-d').value.trim() || 'N/A', hora: document.getElementById('m-r2-h').value.trim() || 'N/A' }
+                { nome: document.getElementById('m-r2-n').value.trim() || 'N/A', morada: document.getElementById('m-r2-m').value.trim() || 'N/A', data: document.getElementById('m-r2-d').value.trim() || 'N/A', hora: document.getElementById('m-r2-h').value.trim() || 'N/A' },
+                { nome: document.getElementById('m-r3-n').value.trim() || 'N/A', morada: 'N/A', data: 'N/A', hora: 'N/A' }
             ]
         };
 
@@ -535,11 +560,11 @@
                 return;
             }
 
-            const headerRow = matrix[0].map(h => h ? h.toString().trim().replace(/\s+/g, ' ').toLowerCase() : '');
+            const headerRow = matrix[0].map(h => normalizeHeaderString(h));
             primaryDataStorage = [];
 
             function pull(row, targetHeader) {
-                let cleanedTarget = targetHeader.trim().replace(/\s+/g, ' ').toLowerCase();
+                let cleanedTarget = normalizeHeaderString(targetHeader);
                 let mIdx = headerRow.findIndex(h => h === cleanedTarget);
                 if(mIdx !== -1) {
                     return cleanExcelValue(row[mIdx]);
@@ -576,9 +601,14 @@
                     transferPickUpTime: pull(row, 'Hora Pick up Transfer Saída'),
                     transferDepartureDestination: pull(row, 'Destino de saída'),
                     
+                    distancia1: pull(row, 'Distância 1'),
+                    distancia2: pull(row, 'Distância 2'),
+                    distancia3: pull(row, 'Distância 3'),
+
                     dinners: [
                         { nome: pull(row, 'Nome do Restaurante 1'), morada: pull(row, 'Morada do Restaurante 1'), data: pull(row, 'Data 1'), hora: pull(row, 'Hora 1') },
-                        { nome: pull(row, 'Nome do Restaurante 2'), morada: pull(row, 'Morada do Restaurante 2'), data: pull(row, 'Data 2'), hora: pull(row, 'Hora 2') }
+                        { nome: pull(row, 'Nome do Restaurante 2'), morada: pull(row, 'Morada do Restaurante 2'), data: pull(row, 'Data 2'), hora: pull(row, 'Hora 2') },
+                        { nome: pull(row, 'Nome do Restaurante 3'), morada: 'N/A', data: 'N/A', hora: 'N/A' }
                     ]
                 };
                 primaryDataStorage.push(record);
@@ -595,7 +625,7 @@
             alert('No records available to export.');
             return;
         }
-        let output = [["Nome do passageiro", "Evento", "Data  do_Evento", "Local do Evento", "Inscrição", "Nome do Hotel", "VENUE", "Codigo de Reserva do Hotel", "Morada do Hotel", "Fax/Telefone", "Check in date", "Check out date", "Tipologia de Quarto", "Horário de pequeno-almoço", "Voo de Ida ", "nº bilhete (1)", "Voo de Regresso", "nº bilhete (2)", "Data de chegada", "Pick up Transfer chegada", "Data saída", " Hora Pick up Transfer Saída", "Destino de saída"]];
+        let output = [["Nome do passageiro", "Evento", "Data  do_Evento", "Local do Evento", "Inscrição", "Nome do Hotel", "VENUE", "Codigo de Reserva do Hotel", "Morada do Hotel", "Fax/Telefone", "Check in date", "Check out date", "Tipologia de Quarto", "Horário de pequeno-almoço", "Voo de Ida ", "nº bilhete (1)", "Voo de Regresso", "nº bilhete (2)", "Data de chegada", "Pick up Transfer chegada", "Data saída", " Hora Pick up Transfer Saída", "Destino de saída", "Distância 1", "Distância 2", "Distância 3", "Nome do Restaurante 3"]];
         
         primaryDataStorage.forEach(r => {
             output.push([
@@ -603,7 +633,8 @@
                 r.hotelName, r.venue, r.hotelCode, r.hotelAddress, r.hotelPhone,
                 r.checkInDate, r.checkOutDate, r.roomType, r.breakfastHours,
                 r.flightIda, r.ticket1, r.flightRegresso, r.ticket2,
-                r.arrivalDate, r.transferArrival, r.departureDate, r.transferPickUpTime, r.transferDepartureDestination
+                r.arrivalDate, r.transferArrival, r.departureDate, r.transferPickUpTime, r.transferDepartureDestination,
+                r.distancia1, r.distancia2, r.distancia3, r.dinners[2].nome
             ]);
         });
 
@@ -633,7 +664,7 @@
                 })
             ];
 
-            traveler.dinners.forEach(d => {
+            traveler.dinners.slice(0,2).forEach(d => {
                 if (d.nome !== 'N/A') {
                     tableRows.push(new docx.TableRow({
                         children: [
@@ -650,6 +681,20 @@
                 rows: tableRows,
                 width: { size: 100, type: docx.WidthType.PERCENTAGE }
             });
+
+            const distanceElements = [
+                new docx.Paragraph({ text: "Distância do Hotel aos Restaurantes:", bold: true, size: 18, spacing: { before: 180, after: 40 } })
+            ];
+
+            if (traveler.dinners[0] && traveler.dinners[0].nome !== 'N/A' && traveler.distancia1 !== 'N/A') {
+                distanceElements.push(new docx.Paragraph({ text: `“${traveler.dinners[0].nome}”: “${traveler.distancia1}”`, bold: true, size: 18, spacing: { after: 20 } }));
+            }
+            if (traveler.dinners[1] && traveler.dinners[1].nome !== 'N/A' && traveler.distancia2 !== 'N/A') {
+                distanceElements.push(new docx.Paragraph({ text: `“${traveler.dinners[1].nome}”: “${traveler.distancia2}”`, bold: true, size: 18, spacing: { after: 20 } }));
+            }
+            if (traveler.dinners[2] && traveler.dinners[2].nome !== 'N/A' && traveler.distancia3 !== 'N/A') {
+                distanceElements.push(new docx.Paragraph({ text: `“${traveler.dinners[2].nome}”: “${traveler.distancia3}”`, bold: true, size: 18, spacing: { after: 40 } }));
+            }
 
             const content = [
                 new docx.Paragraph({ text: "GRUPO TravelStore", bold: true, size: 20 }),
@@ -693,7 +738,9 @@
                 new docx.Paragraph({ text: "Refeições", bold: true, size: 22, color: "35506B", spacing: { after: 60 } }),
                 new docx.Paragraph({ text: "Serão providenciados os seguintes jantares de grupo:", size: 18, spacing: { after: 120 } }),
                 
-                nativeDiningTable, 
+                nativeDiningTable,
+                
+                ...distanceElements,
 
                 new docx.Paragraph({ text: "Todos os serviços acima mencionados estão pagos pela LAB Events/TravelStore– Prestação de Serviços – Viagens, S.A", size: 16, color: "888888", spacing: { before: 180 } }),
                 new docx.Paragraph({ text: "A Johnson&Johnson Innovative Medicine deseja-lhe uma Boa Viagem!", bold: true, size: 22, alignment: docx.AlignmentType.CENTER, spacing: { before: 180 } })
